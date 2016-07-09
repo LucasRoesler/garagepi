@@ -7,7 +7,11 @@ import settings
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(settings.LED_PIN, GPIO.OUT)
-GPIO.setup(settings.RELAY_PIN_1, GPIO.OUT)
+
+# configure the relay pins to the default off position
+for pin_id, pin_num in settings.RELAY_PINS.items():
+    GPIO.output(pin_num, GPIO.HIGH)
+    GPIO.setup(pin_num, GPIO.OUT)
 
 
 @hug.get(examples='name=Timothy&age=26')
@@ -54,38 +58,17 @@ def led_test(output: hug.types.number = 0, hug_timer=3):
 
 @hug.get(examples='value=0')
 @hug.local()
-def relay_one(value: hug.types.number = 0, hug_timer=3):
+def relay(value: hug.types.number = 0, relay: hug.types.number = 1, hug_timer=3):
     """Toggle the relay state for relay one.
 
     Notes:
         - 0 represents the GPIO low state
         - 1 represents the GPIO high state
     """
-    PIN = settings.RELAY_PIN_1
+    PIN = settings.RELAY_PINS.get(relay, None)
 
-    if value < 1:
-        GPIO.output(PIN, GPIO.LOW)
-    else:
-        GPIO.output(PIN, GPIO.HIGH)
-
-    state = GPIO.input(PIN)
-
-    return {
-        'status': state,
-        'took': float(hug_timer),
-    }
-
-
-@hug.get(examples='value=0')
-@hug.local()
-def relay_two(value: hug.types.number = 0, hug_timer=3):
-    """Toggle the relay state for relay two.
-
-    Notes:
-        - 0 represents the GPIO low state
-        - 1 represents the GPIO high state
-    """
-    PIN = settings.RELAY_PIN_1
+    if PIN is None:
+        raise Exception("Invalid relay id.")
 
     if value < 1:
         GPIO.output(PIN, GPIO.LOW)

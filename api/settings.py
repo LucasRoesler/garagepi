@@ -1,3 +1,8 @@
 LED_PIN = 18
 RELAY_PIN_1 = 17
 RELAY_PIN_2 = 27
+
+RELAY_PINS = {
+    1: RELAY_PIN_1,
+    2: RELAY_PIN_2,
+}
