@@ -10,8 +10,7 @@ GPIO.setup(settings.LED_PIN, GPIO.OUT)
 
 # configure the relay pins to the default off position
 for pin_id, pin_num in settings.RELAY_PINS.items():
-    GPIO.output(pin_num, GPIO.HIGH)
-    GPIO.setup(pin_num, GPIO.OUT)
+    GPIO.setup(pin_num, GPIO.OUT, initial=GPIO.HIGH)
 
 
 @hug.get(examples='name=Timothy&age=26')
