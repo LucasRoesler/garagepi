@@ -9,4 +9,5 @@ COPY requirements.txt /garage/requirements.txt
 
 RUN pip install --no-cache-dir -r /garage/requirements.txt
 
+COPY ./api/ /garage/
 WORKDIR /garage
