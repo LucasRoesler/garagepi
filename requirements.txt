@@ -1,3 +1,5 @@
 gunicorn==19.6.0
 hug==2.1.2
 ipython==5.0.0
+RPi.GPIO==0.6.2
+pigpio==1.30
