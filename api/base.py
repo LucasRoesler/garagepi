@@ -28,7 +28,12 @@ def test(name: hug.types.text, points: hug.types.number = 1, hug_timer=3):
 @hug.get(examples='output=0')
 @hug.local()
 def led_test(output: hug.types.number = 0, hug_timer=3):
-    """Test the LED circuit attached to the RaspberryPi."""
+    """Test the LED circuit attached to the RaspberryPi.
+
+    Notes:
+        - 0 represents the GPIO low state
+        - 1 represents the GPIO high state
+    """
     msg = 'No light!'
     PIN = settings.LED_PIN
     if output < 1:
@@ -50,7 +55,36 @@ def led_test(output: hug.types.number = 0, hug_timer=3):
 @hug.get(examples='value=0')
 @hug.local()
 def relay_one(value: hug.types.number = 0, hug_timer=3):
-    """Toggle the relay state."""
+    """Toggle the relay state for relay one.
+
+    Notes:
+        - 0 represents the GPIO low state
+        - 1 represents the GPIO high state
+    """
+    PIN = settings.RELAY_PIN_1
+
+    if value < 1:
+        GPIO.output(PIN, GPIO.LOW)
+    else:
+        GPIO.output(PIN, GPIO.HIGH)
+
+    state = GPIO.input(PIN)
+
+    return {
+        'status': state,
+        'took': float(hug_timer),
+    }
+
+
+@hug.get(examples='value=0')
+@hug.local()
+def relay_two(value: hug.types.number = 0, hug_timer=3):
+    """Toggle the relay state for relay two.
+
+    Notes:
+        - 0 represents the GPIO low state
+        - 1 represents the GPIO high state
+    """
     PIN = settings.RELAY_PIN_1
 
     if value < 1:
