@@ -7,7 +7,11 @@ import settings
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(settings.LED_PIN, GPIO.OUT)
-GPIO.setup(settings.RELAY_PIN_1, GPIO.OUT)
+
+# configure the relay pins to the default off position
+for pin_id, pin_num in settings.RELAY_PINS.items():
+    GPIO.output(pin_num, GPIO.HIGH)
+    GPIO.setup(pin_num, GPIO.OUT)
 
 
 @hug.get(examples='name=Timothy&age=26')
