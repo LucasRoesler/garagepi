@@ -1,0 +1,16 @@
+version: "2"
+services:
+  garage:
+    build: .
+    command: gunicorn base:__hug_wsgi__ -w 2 -b 0.0.0.0:8081 --reload
+    volumes:
+      - ./api:/garage
+    expose:
+      - "8081"
+    ports:
+      - "8081:8081"
+  # nginx:
+  #   volumes_from:
+  #     - garage
+  #   links:
+  #     - garage
