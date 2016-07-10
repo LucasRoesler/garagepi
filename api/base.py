@@ -10,7 +10,7 @@ GPIO.setup(settings.LED_PIN, GPIO.OUT)
 GPIO.setup(settings.DOOR_DETECTOR_PIN, GPIO.IN)
 
 # configure the relay pins to the default off position
-GPIO.setup(settings.RELAY_PINS.values(), GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(list(settings.RELAY_PINS.values()), GPIO.OUT, initial=GPIO.HIGH)
 
 
 @hug.get(examples='name=Timothy&age=26')
