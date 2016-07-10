@@ -7,10 +7,10 @@ import settings
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(settings.LED_PIN, GPIO.OUT)
+GPIO.setup(settings.DOOR_DETECTOR_PIN, GPIO.IN)
 
 # configure the relay pins to the default off position
-for pin_id, pin_num in settings.RELAY_PINS.items():
-    GPIO.setup(pin_num, GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(settings.RELAY_PINS.values(), GPIO.OUT, initial=GPIO.HIGH)
 
 
 @hug.get(examples='name=Timothy&age=26')
@@ -80,3 +80,23 @@ def relay(value: hug.types.number = 0, relay: hug.types.number = 1, hug_timer=3)
         'status': state,
         'took': float(hug_timer),
     }
+
+
+@hug.get()
+@hug.local()
+def status(hug_timer=3):
+    """Current application status."""
+    resp = {
+        'status': {
+            'led': GPIO.input(settings.LED_PIN),
+            'door_detector': GPIO.input(settings.DOOR_DETECTOR_PIN),
+        },
+        'took': float(hug_timer),
+    }
+
+    resp['status'].update({
+        'relay_{}'.format(relay_id): GPIO.input(pin_id)
+        for relay_id, pin_num in settings.RELAY_PINS.items()
+    })
+
+    return resp
