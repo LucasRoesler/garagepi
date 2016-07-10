@@ -95,7 +95,7 @@ def status(hug_timer=3):
     }
 
     resp['status'].update({
-        'relay_{}'.format(relay_id): GPIO.input(pin_id)
+        'relay_{}'.format(relay_id): GPIO.input(pin_num)
         for relay_id, pin_num in settings.RELAY_PINS.items()
     })
 
