@@ -69,11 +69,14 @@ def toggle_door(hug_timer=3):
     if PIN is None:
         raise Exception("Invalid relay id.")
 
-    GPIO.output(PIN, GPIO.HIGH)
-    time.sleep(0.5)
-    GPIO.output(PIN, GPIO.LOW)
-    time.sleep(0.5)
-    GPIO.output(PIN, GPIO.HIGH)
+    init = getattr(GPIO, settings.RELAY_INIT_STATE)
+    move = getattr(GPIO, settings.DOOR_MOVE_STATE)
+
+    GPIO.output(PIN, init)
+    time.sleep(0.25)
+    GPIO.output(PIN, move)
+    time.sleep(0.25)
+    GPIO.output(PIN, init)
 
     state = GPIO.input(PIN)
 
