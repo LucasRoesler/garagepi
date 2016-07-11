@@ -1,4 +1,5 @@
 """Hug API (local and HTTP access)"""
+import time
 
 import hug
 import RPi.GPIO as GPIO
@@ -10,7 +11,11 @@ GPIO.setup(settings.LED_PIN, GPIO.OUT)
 GPIO.setup(settings.DOOR_DETECTOR_PIN, GPIO.IN)
 
 # configure the relay pins to the default off position
-GPIO.setup(list(settings.RELAY_PINS.values()), GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(
+    list(settings.RELAY_PINS.values()),
+    GPIO.OUT,
+    initial=getattr(GPIO, settings.RELAY_INIT_STATE)
+)
 
 
 @hug.get(examples='name=Timothy&age=26')
@@ -51,6 +56,29 @@ def led_test(output: hug.types.number = 0, hug_timer=3):
     return {
         'status': state,
         'message': msg,
+        'took': float(hug_timer),
+    }
+
+
+@hug.get()
+@hug.local()
+def toggle_door(hug_timer=3):
+    """Send the door "move" signal."""
+
+    PIN = settings.RELAY_PINS.get(settings.DOOR_RELAY_ID, None)
+    if PIN is None:
+        raise Exception("Invalid relay id.")
+
+    GPIO.output(PIN, GPIO.HIGH)
+    time.sleep(0.5)
+    GPIO.output(PIN, GPIO.LOW)
+    time.sleep(0.5)
+    GPIO.output(PIN, GPIO.HIGH)
+
+    state = GPIO.input(PIN)
+
+    return {
+        'status': state,
         'took': float(hug_timer),
     }
 
