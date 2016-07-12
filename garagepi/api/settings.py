@@ -1,7 +1,8 @@
-import os
-
-
-API_KEY = os.environ.get('API_KEY')
+try:
+    from local_settings import API_KEY
+except:
+    import os
+    API_KEY = os.environ.get('API_KEY')
 
 LED_PIN = 18
 
