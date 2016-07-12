@@ -4,7 +4,7 @@ services:
     build: .
     command: gunicorn base:__hug_wsgi__ -w 2 -b 0.0.0.0:8081 --reload
     volumes:
-      - ./api:/garage
+      - ./garagepi/api:/garage
     expose:
       - "8081"
     ports:
