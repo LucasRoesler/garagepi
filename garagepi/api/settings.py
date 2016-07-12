@@ -1,3 +1,8 @@
+import os
+
+
+API_KEY = os.environ.get('API_KEY')
+
 LED_PIN = 18
 
 

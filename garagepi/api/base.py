@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 
 import settings
 
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(settings.LED_PIN, GPIO.OUT)
 GPIO.setup(settings.DOOR_DETECTOR_PIN, GPIO.IN)
@@ -18,7 +19,21 @@ GPIO.setup(
 )
 
 
-@hug.get(examples='name=Timothy&age=26')
+def token_verify(token):
+    if settings.API_KEY == token:
+        return True
+    else:
+        return False
+    #secret_key = 'super-secret-key-please-change'
+    #try:
+    #    return jwt.decode(token, secret_key, algorithm='HS256')
+    #except jwt.DecodeError:
+    #    return False
+
+token_key_authentication = hug.authentication.token(token_verify)
+
+
+@hug.get(examples='name=Timothy&age=26', requires=token_key_authentication)
 @hug.local()
 def test(name: hug.types.text, points: hug.types.number = 1, hug_timer=3):
     """Says hello to a user."""
@@ -33,7 +48,7 @@ def test(name: hug.types.text, points: hug.types.number = 1, hug_timer=3):
     }
 
 
-@hug.get(examples='output=0')
+@hug.get(examples='output=0', requires=token_key_authentication)
 @hug.local()
 def led_test(output: hug.types.number = 0, hug_timer=3):
     """Test the LED circuit attached to the RaspberryPi.
@@ -60,7 +75,7 @@ def led_test(output: hug.types.number = 0, hug_timer=3):
     }
 
 
-@hug.get()
+@hug.get(requires=token_key_authentication)
 @hug.local()
 def toggle_door(hug_timer=3):
     """Send the door "move" signal."""
@@ -86,7 +101,7 @@ def toggle_door(hug_timer=3):
     }
 
 
-@hug.get(examples='value=0')
+@hug.get(examples='value=0', requires=token_key_authentication)
 @hug.local()
 def relay(value: hug.types.number = 0, relay: hug.types.number = 1, hug_timer=3):
     """Toggle the relay state for relay one.
@@ -113,7 +128,7 @@ def relay(value: hug.types.number = 0, relay: hug.types.number = 1, hug_timer=3)
     }
 
 
-@hug.get()
+@hug.get(requires=token_key_authentication)
 @hug.local()
 def status(hug_timer=3):
     """Current application status."""
